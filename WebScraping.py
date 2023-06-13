@@ -10,10 +10,6 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from time import sleep
 
-from json import dumps
-
-from flask import Flask, render_template, jsonify
-
 from pandas import DataFrame
 
 
@@ -33,16 +29,13 @@ options = Options()
 # options.add_argument("--headless")
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36")
 options.add_argument("--window-size=1920,1200")
-options.add_experimental_option("detach", True)
+# options.add_experimental_option("detach", True)
 
 # Start up brodser and go to website
 driver = webdriver.Chrome(options=options)
 driver.get('https://stockanalysis.com/stocks/screener/')
 
 wait = WebDriverWait(driver, 20)
-
-# Start Web Server
-app = Flask(__name__)
 
 
 
@@ -86,7 +79,7 @@ def clickXPath(selector):
 def filter():
     clickSelector('#main > div.rounded.border.bg-gray-50.p-2.dark\:border-dark-600.dark\:bg-dark-775 > div.mt-3.flex.flex-col.gap-y-2\.5.sm\:flex-row.lg\:gap-y-2.pb-1 > button')
     clickSelector('#analystRatings')
-    clickSelector("#main > div.rounded.border.bg-gray-50.p-2.dark\:border-dark-600.dark\:bg-dark-775 > div.mt-3.flex.flex-col.gap-y-2\.5.sm\:flex-row.lg\:gap-y-2.border-b.border-default.pb-3.dark\:border-sharp > div.fixed.left-0.top-0.z-40.flex.h-screen.w-screen.items-center.justify-center.bg-gray-500\/50 > div > button")
+    clickSelector("#main > div.rounded.border.bg-gray-50.p-2.dark\:border-dark-600.dark\:bg-dark-775 > div.mt-3.flex.flex-col.gap-y-2\.5.sm\:flex-row.lg\:gap-y-2.border-b.border-default.pb-3.dark\:border-sharp > div.fixed.left-0.top-0.z-\[99\].flex.h-screen.w-screen.items-center.justify-center.bg-gray-500\/50 > div > button")
     clickSelector("#main > div.rounded.border.bg-gray-50.p-2.dark\:border-dark-600.dark\:bg-dark-775 > div.sm\:grid.sm\:grid-cols-2.sm\:gap-x-2\.5.lg\:grid-cols-3 > div > div.flex.items-center > div > button")
     clickSelector("#Strong\ Buy")
     clickSelector("#main > div.relative.mt-4 > div.mt-5.grid-cols-2.items-center.border-gray-300.dark\:border-dark-700.sm\:mt-6.sm\:grid.sm\:border-t.lg\:flex.lg\:space-x-1.lg\:overflow-visible.lg\:py-2.lg\:px-1 > div.hide-scroll.col-span-2.overflow-x-auto.border-t.border-default.lg\:order-2.lg\:grow.lg\:border-0.lg\:pl-1.xl\:pl-3 > nav > ul > li:nth-child(4) > button")
@@ -151,9 +144,16 @@ def forecastTable(stockData):
 
             for row in table:
                 cells = row.split(" ")
+                num = 0
 
                 header.append(" ".join(cells[:-6]))
-                data.append(int(cells[-1]))
+
+                if cells[-1] != "n/a":
+                    num = int(cells[-1])
+                else:
+                    num = 0
+
+                data.append(num)
 
         except NoSuchElementException:
             print("forecast not found")
@@ -168,8 +168,7 @@ def forecastTable(stockData):
 # Sort Stocks by ratings
 def sortStocks(stockData):
     # Calculating Stock Analysis Score
-    for symbol in stockData:
-        stock = stockData[symbol]
+    for stock in stockData.values():
         forecast = stock["Forecast"]
         stock["Rating Score"] = 0
         
@@ -192,38 +191,40 @@ def sortStocks(stockData):
     
     # Sorting Stocks by Rating Score
     stockData = dict(sorted(stockData.items(), key=lambda item: item[1]["Rating Score"], reverse=True))
-    print(stockData)
-
     return stockData
 
 def saveToExcel(stockData):
-    for symbol in stockData:
-        stock = stockData[symbol]
+    data = {}
+    count = 0
 
-        for 
+    # Extracting Data
+    for stock in stockData.values():
+        for header, value in stock.items():
 
-# def saveToExcel(stockInfo, stockForcasts, stockScores):
-    # for symbol in stockScores.keys():
-    #     print(symbol, stockInfo[symbol], stockInfo[symbol][-1], stockInfo[symbol][-1].split("\n"), sep="\n", end="\n\n")
-    #     # stockInfo[symbol][-1].split("\n")[2].replace("%", "")
+            # Creating Headers
+            if count == 0:
 
-    # print(list(map(lambda score : float(score) if score != "-" else 0, map(lambda symbol : stockInfo[symbol][-1].split("\n")[4].replace("%", ""), stockScores.keys()))))
-    # df = DataFrame({
-    #     "Symbol": map(lambda symbol : symbol, stockScores.keys()),
-    #     "Price": map(lambda symbol : float(stockInfo[symbol][-2].replace(",", "")), stockScores.keys()),
-    #     "1D Change(%)": map(lambda score : float(score) if score != "-" else 0, map(lambda symbol : stockInfo[symbol][-1].split("\n")[2].replace("%", ""), stockScores.keys())),
-    #     "1W Change(%)": map(lambda score : float(score) if score != "-" else 0, map(lambda symbol : stockInfo[symbol][-1].split("\n")[3].replace("%", ""), stockScores.keys())),
-    #     "1M Change(%)": map(lambda score : float(score) if score != "-" else 0, map(lambda symbol : stockInfo[symbol][-1].split("\n")[4].replace("%", ""), stockScores.keys())),
-    #     "Analyst Count": map(lambda symbol : float(stockInfo[symbol][-3].replace(",", "")), stockScores.keys()),
-    #     "Strong Buy": map(lambda symbol : int(stockForcasts[symbol]["Strong Buy"]), stockScores.keys()),
-    #     "Buy": map(lambda symbol : int(stockForcasts[symbol]["Buy"]), stockScores.keys()),
-    #     "Hold": map(lambda symbol : int(stockForcasts[symbol]["Hold"]), stockScores.keys()),
-    #     "Sell": map(lambda symbol : int(stockForcasts[symbol]["Sell"]), stockScores.keys()),
-    #     "Strong Sell": map(lambda symbol : int(stockForcasts[symbol]["Strong Sell"]), stockScores.keys()),
-    #     "Score": map(lambda forecast : forecast, stockScores.values())
-    # })
+                if header != "Forecast":
+                    data[header] = []
 
-    # df.to_excel('D:\Goh Hong Rui\Tests\Web Scraping\\test.xlsx', sheet_name='sheet1', index=False)
+                else:
+
+                    for forecastHeader in stock["Forecast"]:
+                        data[forecastHeader] = []
+
+            # Extracting Data
+            if header != "Forecast":
+                data[header].append(value)
+
+            else:
+
+                for forecastHeader in stock["Forecast"]:
+                    data[forecastHeader].append(value[forecastHeader])
+
+        count += 1
+
+    df = DataFrame(data)
+    df.to_excel('D:\Goh Hong Rui\Tests\Web Scraping\\test.xlsx', sheet_name='sheet1', index=False)
 
 
 
@@ -236,11 +237,6 @@ def saveToExcel(stockData):
 
 
 # --------------------------------------------- Run ---------------------------------------------
-
-# Landing Page Route
-@app.route("/", methods=["GET"])
-def index():
-    return render_template("index.html")
 
 print("--------------------------------------------- Start ---------------------------------------------")
 
@@ -256,7 +252,8 @@ addRows()
 print("--------------------------------------------- Rows Added, Getting Stock Screener Table Data ---------------------------------------------")
 stocks = screenerTable({})
 
-# Next Page 
+# Next Page
+print("--------------------------------------------- Next Page ---------------------------------------------")
 clickSelector("#main > div.relative.mt-4 > nav > button.controls-btn.xs\:pl-1.xs\:pr-1\.5.bp\:text-sm.sm\:pl-3.sm\:pr-1")
 
 stocks = screenerTable(stocks)

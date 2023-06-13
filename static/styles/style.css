@@ -1,0 +1,289 @@
+/* ----------------- General Styles ----------------- */
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    background: #edf2f4;
+    padding: 1vh 1vw;
+}
+
+/* ----------------- Navbar Styles ----------------- */
+
+nav {
+    position: fixed;
+    bottom: 5vh;
+    left: 5vh;
+}
+
+.menu {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    padding: 0;
+}
+
+.line {
+    fill: none;
+    stroke: white;
+    stroke-width: 4;
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+        stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line1 {
+    stroke-dasharray: 60 207;
+    stroke-width: 4;
+}
+
+.line2 {
+    stroke-dasharray: 60 60;
+    stroke-width: 4;
+}
+
+.line3 {
+    stroke-dasharray: 60 207;
+    stroke-width: 4;
+}
+
+.opened .line1 {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134;
+    stroke-width: 4;
+}
+
+.opened .line2 {
+    stroke-dasharray: 1 60;
+    stroke-dashoffset: -30;
+    stroke-width: 4;
+}
+
+.opened .line3 {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134;
+    stroke-width: 4;
+}
+
+.check input {
+    display: none;
+}
+
+.check input:checked+label .box {
+    -webkit-animation: animOnTransform 1s 1 forwards;
+    animation: animOnTransform 1s 1 forwards;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.check input:checked+label .box i {
+    transform: translate(-50%, -50%) scale(1);
+    transition-duration: 200ms;
+    transition-delay: 400ms;
+    opacity: 1;
+}
+
+.check label {
+    min-width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    min-height: 60px;
+    cursor: pointer;
+}
+
+.check label .box {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    transition: background 300ms ease;
+}
+
+.check label .box:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.check label .box i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    display: inline-block;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease-in-out;
+    transition-delay: 200ms;
+    transform: translate(-50%, -50%) scale(4);
+}
+
+@-webkit-keyframes animOn {
+    40% {
+        height: 20px;
+        width: 100px;
+    }
+
+    50% {
+        height: 60px;
+        width: 30px;
+    }
+
+    60% {
+        height: 40px;
+        width: 70px;
+    }
+
+    70% {
+        height: 55px;
+        width: 45px;
+    }
+
+    100% {
+        height: 50px;
+        width: 50px;
+    }
+}
+
+@keyframes animOn {
+    40% {
+        height: 20px;
+        width: 100px;
+    }
+
+    50% {
+        height: 60px;
+        width: 30px;
+    }
+
+    60% {
+        height: 40px;
+        width: 70px;
+    }
+
+    70% {
+        height: 55px;
+        width: 45px;
+    }
+
+    100% {
+        height: 50px;
+        width: 50px;
+    }
+}
+
+@-webkit-keyframes animOnTransform {
+    40% {
+        transform: scale(1.5, 0.5);
+    }
+
+    50% {
+        transform: scale(0.5, 1.5);
+    }
+
+    60% {
+        transform: scale(1.3, 0.6);
+    }
+
+    70% {
+        transform: scale(0.8, 1.2);
+    }
+
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes animOnTransform {
+    40% {
+        transform: scale(1.5, 0.5);
+    }
+
+    50% {
+        transform: scale(0.5, 1.5);
+    }
+
+    60% {
+        transform: scale(1.3, 0.6);
+    }
+
+    70% {
+        transform: scale(0.8, 1.2);
+    }
+
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+nav ul {
+    display: none;
+    width: 0vw;
+    background: #14213d;
+    transition: all .5s ease-in-out;
+    list-style: none;
+    padding: 1vh 1vw;
+}
+
+nav ul li {
+    color: white;
+    text-align: center;
+}
+
+nav ul.show {
+    display: grid;
+    min-width: calc(2vw + 400px);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+/* ----------------- Page Styles ----------------- */
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+
+body {
+    background: -webkit-linear-gradient(left, #25c481, #25b7c4);
+    background: linear-gradient(to right, #25c481, #25b7c4);
+    font-family: 'Roboto', sans-serif;
+}
+
+table {
+    min-width: 100%;
+    min-height: 100%;
+    table-layout: fixed;
+}
+
+.tbl-header {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.tbl-content {
+    height: 300px;
+    overflow-x: auto;
+    margin-top: 0px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+th {
+    padding: 1vh 1vw;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 1vh 1vw;
+    text-align: left;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: 300;
+    font-size: 12px;
+    color: #fff;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+}
