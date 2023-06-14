@@ -195,14 +195,13 @@ def sortStocks(stockData):
 
 def saveToExcel(stockData):
     data = {}
-    count = 0
 
     # Extracting Data
     for stock in stockData.values():
         for header, value in stock.items():
 
             # Creating Headers
-            if count == 0:
+            if header not in data or header == "Forecast":
 
                 if header != "Forecast":
                     data[header] = []
@@ -210,7 +209,8 @@ def saveToExcel(stockData):
                 else:
 
                     for forecastHeader in stock["Forecast"]:
-                        data[forecastHeader] = []
+                        if forecastHeader not in data:
+                            data[forecastHeader] = []
 
             # Extracting Data
             if header != "Forecast":
@@ -221,8 +221,8 @@ def saveToExcel(stockData):
                 for forecastHeader in stock["Forecast"]:
                     data[forecastHeader].append(value[forecastHeader])
 
-        count += 1
-
+    print(list(map(lambda value : len(value), data.values())))
+                    
     df = DataFrame(data)
     df.to_excel('D:\Goh Hong Rui\Tests\Web Scraping\\test.xlsx', sheet_name='sheet1', index=False)
 
