@@ -31,8 +31,18 @@ function createTable(headers, data) {
     }
 }
 
-console.log(stocksData, headers)
+function autofit() {
+    const width = $(".tbl-header").css("width")
+    $(".tbl-content").css("width", width)
+    $("body").css("width", width)
+    $("body").css("bacvground", `linear-gradient(to right, #25c481, ${width}, #25b7c4)`)
+}
+
 createTable(headers, stocksData)
+
+$(document).ready(function () {
+    autofit()
+});
 
 const checkboxes = $("nav ul li input")
 
@@ -69,7 +79,7 @@ $("nav button").click(function () {
             return Object.fromEntries(newStock)
         })
 
-        console.log(data)
         createTable(headers, data)
+        autofit()
     })
 })

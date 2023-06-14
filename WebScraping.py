@@ -149,7 +149,7 @@ def forecastTable(stockData):
                 header.append(" ".join(cells[:-6]))
 
                 if cells[-1] != "n/a":
-                    num = int(cells[-1])
+                    num = float(cells[-1])
                 else:
                     num = 0
 
@@ -220,8 +220,6 @@ def saveToExcel(stockData):
 
                 for forecastHeader in stock["Forecast"]:
                     data[forecastHeader].append(value[forecastHeader])
-
-    print(list(map(lambda value : len(value), data.values())))
                     
     df = DataFrame(data)
     df.to_excel('D:\Goh Hong Rui\Tests\Web Scraping\\test.xlsx', sheet_name='sheet1', index=False)

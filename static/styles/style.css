@@ -8,9 +8,7 @@
 
 body {
     min-width: 100vw;
-    min-height: 100vh;
     background: #edf2f4;
-    padding: 1vh 1vw;
 }
 
 /* ----------------- Navbar Styles ----------------- */
@@ -247,23 +245,27 @@ nav ul.show {
 
 body {
     background: -webkit-linear-gradient(left, #25c481, #25b7c4);
-    background: linear-gradient(to right, #25c481, #25b7c4);
+    background: linear-gradient(to right, #25c481, 100%, #25b7c4);
     font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 98vh;
 }
 
 table {
     min-width: 100%;
-    min-height: 100%;
     table-layout: fixed;
 }
 
 .tbl-header {
+    max-height: 5vh;
     background-color: rgba(255, 255, 255, 0.3);
+    width: max-content;
 }
 
 .tbl-content {
-    height: 300px;
-    overflow-x: auto;
+    max-height: 93vh;
+    overflow: auto;
     margin-top: 0px;
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
