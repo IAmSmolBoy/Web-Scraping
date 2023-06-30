@@ -1,16 +1,20 @@
 # --------------------------------------------- Imports ---------------------------------------------
 from selenium import webdriver
-
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-from time import sleep
+import requests
+import os
 
+from time import sleep
 from pandas import DataFrame
+from io import BytesIO
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 
@@ -133,6 +137,14 @@ def forecastTable(stockData):
     for stock in stocks:
         header = []
         data = []
+        forecastData = {
+            "Strong Buy": 0,
+            "Buy": 0,
+            "Hold": 0,
+            "Sell": 0,
+            "Strong Sell": 0,
+
+        }
 
         try:
             driver.get(f'https://stockanalysis.com/stocks/{stock}/forecast/')
@@ -155,14 +167,16 @@ def forecastTable(stockData):
 
                 data.append(num)
 
+            forecastData = dict(zip(header, data))
+
         except NoSuchElementException:
             print("forecast not found")
-
+            
         except TimeoutException:
             print("Website unreachable")
 
-        stocks[stock]["Forecast"] = dict(zip(header, data))
-    
+        stocks[stock]["Forecast"] = forecastData
+
     return stocks
 
 # Sort Stocks by ratings
@@ -220,9 +234,31 @@ def saveToExcel(stockData):
 
                 for forecastHeader in stock["Forecast"]:
                     data[forecastHeader].append(value[forecastHeader])
-                    
+
     df = DataFrame(data)
     df.to_excel('D:\Goh Hong Rui\Tests\Web Scraping\\test.xlsx', sheet_name='sheet1', index=False)
+
+    return df
+
+def uploadToPythonAnywhere(df):
+    TOKEN = os.getenv('PYTHONANYWHERE_TOKEN')
+    USER = "rayjohninson"
+
+    ENDPOINT = 'https://www.pythonanywhere.com'
+    API = f'/api/v0/user/{USER}/files/path'
+    FILEPATH = f'/home/{USER}/Web-Scraping'
+    FILENAME = '/test.xlsx'
+
+    buffer = BytesIO()
+    df.to_excel(buffer, index=False)
+    buffer.seek(0)
+
+    res = requests.post(ENDPOINT + API + FILEPATH + FILENAME,
+        files={ 'content': buffer },
+        headers={ 'Authorization': 'Token ' + TOKEN }
+    )
+
+    print(res)
 
 
 
@@ -267,6 +303,9 @@ driver.quit()
 sortedForecasts = sortStocks(forecasts)
 
 print("--------------------------------------------- Stocks Sorted, Saving to Excel ---------------------------------------------")
-saveToExcel(sortedForecasts)
+excelDF = saveToExcel(sortedForecasts)
 
-print("Web scraping complete")
+print("--------------------------------------------- Saved to Excel, Uploading to PythonAnywhere ---------------------------------------------")
+uploadToPythonAnywhere(excelDF)
+
+print("=================================================================== Web Scraping Complete ===================================================================")
