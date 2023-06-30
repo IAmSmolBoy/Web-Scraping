@@ -245,12 +245,18 @@ def uploadToPythonAnywhere(df):
     TOKEN = os.getenv('PYTHONANYWHERE_TOKEN')
     USER = os.getenv('USER')
 
-    ENDPOINT = 'https://www.pythonanywhere.com/api/v0/user/{USER}'
-    FILESAPI = f'/files/path'
+    print(TOKEN, USER)
+
+    ENDPOINT = f'https://www.pythonanywhere.com/api/v0/user/{USER}'
+    FILESAPI = '/files/path'
     FILEPATH = f'/home/{USER}/Web-Scraping'
     FILENAME = '/test.xlsx'
 
     RELOADAPI = f"/webapps/{USER}.pythonanywhere.com/reload/"
+
+    HEADERS = { 'Authorization': 'Token ' + TOKEN }
+
+    print(ENDPOINT + FILESAPI + FILEPATH + FILENAME, ENDPOINT + RELOADAPI)
 
     # Convert excel to bytes to store in pythonanywhere
     buffer = BytesIO()
@@ -259,13 +265,15 @@ def uploadToPythonAnywhere(df):
 
     res = requests.post(ENDPOINT + FILESAPI + FILEPATH + FILENAME,
         files={ 'content': buffer },
-        headers={ 'Authorization': 'Token ' + TOKEN }
+        headers=HEADERS
     )
 
-    print(res)
+    print(res.content)
 
     # Reload web app to reflect changes
-    requests.post(ENDPOINT + RELOADAPI, headers={ 'Authorization': 'Token ' + TOKEN })
+    res = requests.post(ENDPOINT + RELOADAPI, headers=HEADERS)
+
+    print(res.content)
 
 
 
