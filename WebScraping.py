@@ -241,24 +241,31 @@ def saveToExcel(stockData):
     return df
 
 def uploadToPythonAnywhere(df):
+    # Initialising varirables
     TOKEN = os.getenv('PYTHONANYWHERE_TOKEN')
-    USER = "rayjohninson"
+    USER = os.getenv('USER')
 
-    ENDPOINT = 'https://www.pythonanywhere.com'
-    API = f'/api/v0/user/{USER}/files/path'
+    ENDPOINT = 'https://www.pythonanywhere.com/api/v0/user/{USER}'
+    FILESAPI = f'/files/path'
     FILEPATH = f'/home/{USER}/Web-Scraping'
     FILENAME = '/test.xlsx'
 
+    RELOADAPI = f"/webapps/{USER}.pythonanywhere.com/reload/"
+
+    # Convert excel to bytes to store in pythonanywhere
     buffer = BytesIO()
     df.to_excel(buffer, index=False)
     buffer.seek(0)
 
-    res = requests.post(ENDPOINT + API + FILEPATH + FILENAME,
+    res = requests.post(ENDPOINT + FILESAPI + FILEPATH + FILENAME,
         files={ 'content': buffer },
         headers={ 'Authorization': 'Token ' + TOKEN }
     )
 
     print(res)
+
+    # Reload web app to reflect changes
+    requests.post(ENDPOINT + RELOADAPI, headers={ 'Authorization': 'Token ' + TOKEN })
 
 
 
