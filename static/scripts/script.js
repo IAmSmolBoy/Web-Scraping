@@ -20,7 +20,7 @@ function createTable(headers, data) {
         $("table tbody").append(`
             <tr>
                 <td>
-                    <h3>${i}</h3>
+                    <h3>${i + 1}</h3>
                 </td>
             </tr>`)
 
@@ -37,6 +37,13 @@ function autofit() {
     $("body").css("width", width)
     $("body").css("bacvground", `linear-gradient(to right, #25c481, ${width}, #25b7c4)`)
 }
+
+
+
+
+
+
+
 
 createTable(headers, stocksData)
 
