@@ -1,4 +1,10 @@
-function createTable(headers, data) {
+var columns = localStorage.getItem("columns")
+if (columns) columns = columns.split(", ")
+const checkboxes = $("nav ul li input")
+
+
+
+function createTable(headersList) {
     $("table").empty()
     
     $(".tbl-header table").html(`
@@ -12,21 +18,26 @@ function createTable(headers, data) {
     </tbody>`)
     
 
-    for (const header of headers) {
+    for (const header of headersList) {
         $("table thead tr").append(`<th>${header}</th>`)
     }
 
-    for (const [i, row] of data.entries()) {
+    for (const [i, row] of stocksData.entries()) {
         $("table tbody").append(`
             <tr>
                 <td>
                     <h3>${i + 1}</h3>
                 </td>
             </tr>`)
+        for (const [ header, cell ] of Object.entries(row)) {
 
-        for (const cell of Object.values(row)) {
-            $("table tbody tr").eq(i).append(`
-                <td>${cell}</td>`)
+            if (headersList.includes(header)) {
+                
+                $("table tbody tr").eq(i).append(`
+                    <td>${cell}</td>`)
+
+            }
+
         }
     }
 }
@@ -45,13 +56,17 @@ function autofit() {
 
 
 
-createTable(headers, stocksData)
 
 $(document).ready(function () {
+    const currHeaders = headers.filter(header => columns.includes(header))
+
+    for (const column of columns) {
+        document.getElementById(column).checked = true
+    }
+
+    createTable(currHeaders)
     autofit()
 });
-
-const checkboxes = $("nav ul li input")
 
 $(window).on("load resize", function () {
     var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
@@ -68,7 +83,6 @@ $("nav button").click(function () {
 
     checkboxes.change(function (e) {
         const headers = []
-
         const checked = $("nav ul li input:checked")
 
         checked.each(i => {
@@ -79,14 +93,8 @@ $("nav button").click(function () {
             }
         })
 
-        const data = stocksData.map(stock => {
-            const newStock = Object.entries(stock)
-                .filter(([key]) => headers.includes(key))
-
-            return Object.fromEntries(newStock)
-        })
-
-        createTable(headers, data)
+        localStorage.setItem("columns", headers.join(", "))
+        createTable(headers)
         autofit()
     })
 })

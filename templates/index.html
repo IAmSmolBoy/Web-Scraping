@@ -13,7 +13,7 @@
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script defer>
         const stocksData = {{ stocks | safe }}
-        const headers = {{ headers | safe }}
+        const headers = Object.keys(stocksData[0])
     </script>
     <script defer src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 </head>
@@ -21,11 +21,11 @@
 <body>
     <nav>
         <ul>
-            {% for header in headers %}
+            {% for header in stocks[0].keys() %}
 
                 <li class="check">
                     {{ header }}
-                    <input id="{{ header }}" name="{{ header }}" type="checkbox" checked />
+                    <input id="{{ header }}" name="{{ header }}" type="checkbox" />
                     <label for="{{ header }}">
                         <div class="box"><i class="fa fa-check"></i></div>
                     </label>
@@ -35,7 +35,7 @@
 
             <li class="check">
                 All
-                <input id="all" name="all" type="checkbox" checked />
+                <input id="all" name="all" type="checkbox" />
                 <label for="all">
                     <div class="box"><i class="fa fa-check"></i></div>
                 </label>

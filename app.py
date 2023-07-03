@@ -24,4 +24,4 @@ def index():
         
         data.append(stock)
 
-    return render_template("index.html", headers=headers, stocks=data)
+    return render_template("index.html", stocks=data)
