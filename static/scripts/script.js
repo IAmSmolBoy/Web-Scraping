@@ -1,5 +1,13 @@
 var columns = localStorage.getItem("columns")
+
 if (columns) columns = columns.split(", ")
+else columns = []
+
+if (columns.length === 0) {
+    columns = headers
+    localStorage.setItem("columns", headers)
+}
+
 const checkboxes = $("nav ul li input")
 
 
@@ -13,6 +21,7 @@ function createTable(headersList) {
             <th>Rank</th>
         </tr>
     </thead>`)
+
     $(".tbl-content table").html(`
     <tbody>
     </tbody>`)
@@ -32,9 +41,16 @@ function createTable(headersList) {
         for (const [ header, cell ] of Object.entries(row)) {
 
             if (headersList.includes(header)) {
-                
-                $("table tbody tr").eq(i).append(`
-                    <td>${cell}</td>`)
+
+                var cellHTML = `
+                    <td>${cell}</td>`
+
+                if (header === "Symbol") {
+                    cellHTML = `
+                    <td><a href="https://stockanalysis.com/stocks/${cell}/forecast/" target="_blank" rel="noopener noreferrer">${cell}</a></td>`
+                }
+
+                $("table tbody tr").eq(i).append(cellHTML)
 
             }
 

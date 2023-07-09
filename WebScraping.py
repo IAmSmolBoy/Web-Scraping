@@ -264,12 +264,12 @@ def uploadToPythonAnywhere(df):
         headers=HEADERS
     )
 
-    print(res.content)
+    print(res.content.split("'")[1])
 
     # Reload web app to reflect changes
     res = requests.post(ENDPOINT + RELOADAPI, headers=HEADERS)
 
-    print(res.content)
+    print(res.content.split("'")[1])
 
 
 
