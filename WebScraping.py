@@ -263,13 +263,13 @@ def uploadToPythonAnywhere(df):
         files={ 'content': buffer },
         headers=HEADERS
     )
-
-    print(res.content.split("'")[1])
+    
+    print("Upload Response: " + res.content.decode('utf-8'))
 
     # Reload web app to reflect changes
     res = requests.post(ENDPOINT + RELOADAPI, headers=HEADERS)
-
-    print(res.content.split("'")[1])
+    
+    print("Reload Response: " + res.content.decode('utf-8'))
 
 
 
