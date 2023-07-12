@@ -32,9 +32,8 @@ load_dotenv()
 options = Options()
 # options.add_argument("--headless")
 # options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36")
-# options.add_argument("--window-size=1920,1200")
-# options.add_experimental_option("detach", True)
-
+options.add_argument("--window-size=1920,1200")
+options.add_experimental_option("detach", True)
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 
