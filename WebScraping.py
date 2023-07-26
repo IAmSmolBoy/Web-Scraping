@@ -297,6 +297,7 @@ print("--------------------------------------------- Columns Added, Adding Rows 
 addRows()
 
 print("--------------------------------------------- Rows Added, Getting Stock Screener Table Data ---------------------------------------------")
+clickSelector("body > div > div.fixed.left-0.top-0.z-\[99\].flex.h-screen.w-screen.items-center.justify-center.bg-gray-500\/50 > div > button")
 stocks = screenerTable({})
 
 # Next Page
